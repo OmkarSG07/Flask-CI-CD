@@ -26,4 +26,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: your-dockerhub-username/flask-app:latest  # Replace with your Docker Hub username
+        tags: omkarsg07/flask-app:latest 
