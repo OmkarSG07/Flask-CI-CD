@@ -1,0 +1,25 @@
+- name: Setup Flask App on EC2
+  hosts: flask_server
+  become: yes
+
+  tasks:
+    - name: Update system packages
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Flask Docker image
+      command: docker pull omkarsg07/flask-app:latest
+
+    - name: Run Flask app container
+      command: docker run -d -p 5000:5000 omkarsg07/flask-app:latest
