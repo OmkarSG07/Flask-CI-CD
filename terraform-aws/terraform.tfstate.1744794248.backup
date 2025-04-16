@@ -1,7 +1,7 @@
 {
   "version": 4,
   "terraform_version": "1.11.2",
-  "serial": 104,
+  "serial": 94,
   "lineage": "9b9cc76f-b921-416c-09b0-c5401e651ecc",
   "outputs": {
     "alb_dns_name": {
@@ -157,11 +157,12 @@
       "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
       "instances": [
         {
+          "status": "tainted",
           "schema_version": 0,
           "attributes": {
-            "arn": "arn:aws:ec2:us-east-1:985539783791:internet-gateway/igw-06bcd4b3733cd83d7",
-            "id": "igw-06bcd4b3733cd83d7",
-            "owner_id": "985539783791",
+            "arn": null,
+            "id": "igw-02eb8cfc2158afbc5",
+            "owner_id": null,
             "tags": {
               "Name": "flask-vpc-igw"
             },
@@ -437,101 +438,6 @@
             "aws_lb_target_group.flask_tg",
             "aws_security_group.alb_sg",
             "aws_security_group.flask_sg"
-          ]
-        }
-      ]
-    },
-    {
-      "mode": "managed",
-      "type": "aws_route_table",
-      "name": "public_rt",
-      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "arn": "arn:aws:ec2:us-east-1:985539783791:route-table/rtb-05f1abfa92ff1a1b6",
-            "id": "rtb-05f1abfa92ff1a1b6",
-            "owner_id": "985539783791",
-            "propagating_vgws": [],
-            "route": [
-              {
-                "carrier_gateway_id": "",
-                "cidr_block": "0.0.0.0/0",
-                "core_network_arn": "",
-                "destination_prefix_list_id": "",
-                "egress_only_gateway_id": "",
-                "gateway_id": "igw-06bcd4b3733cd83d7",
-                "ipv6_cidr_block": "",
-                "local_gateway_id": "",
-                "nat_gateway_id": "",
-                "network_interface_id": "",
-                "transit_gateway_id": "",
-                "vpc_endpoint_id": "",
-                "vpc_peering_connection_id": ""
-              }
-            ],
-            "tags": {
-              "Name": "flask-public-rt"
-            },
-            "tags_all": {
-              "Name": "flask-public-rt"
-            },
-            "timeouts": null,
-            "vpc_id": "vpc-0568181c90d806867"
-          },
-          "sensitive_attributes": [],
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
-          "dependencies": [
-            "aws_internet_gateway.igw"
-          ]
-        }
-      ]
-    },
-    {
-      "mode": "managed",
-      "type": "aws_route_table_association",
-      "name": "alb_subnet_1",
-      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "gateway_id": "",
-            "id": "rtbassoc-05a1f9f272431de3f",
-            "route_table_id": "rtb-05f1abfa92ff1a1b6",
-            "subnet_id": "subnet-024d1f3b264836506",
-            "timeouts": null
-          },
-          "sensitive_attributes": [],
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
-          "dependencies": [
-            "aws_internet_gateway.igw",
-            "aws_route_table.public_rt"
-          ]
-        }
-      ]
-    },
-    {
-      "mode": "managed",
-      "type": "aws_route_table_association",
-      "name": "alb_subnet_2",
-      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "gateway_id": "",
-            "id": "rtbassoc-01219399826ec5539",
-            "route_table_id": "rtb-05f1abfa92ff1a1b6",
-            "subnet_id": "subnet-004f09fa908d55780",
-            "timeouts": null
-          },
-          "sensitive_attributes": [],
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozMDAwMDAwMDAwMDAsImRlbGV0ZSI6MzAwMDAwMDAwMDAwLCJ1cGRhdGUiOjEyMDAwMDAwMDAwMH19",
-          "dependencies": [
-            "aws_internet_gateway.igw",
-            "aws_route_table.public_rt"
           ]
         }
       ]

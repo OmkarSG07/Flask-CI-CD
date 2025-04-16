@@ -1,8 +1,45 @@
-venv
-__pycache__
+# Python artifacts
+venv/
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# MacOS system file
 .DS_Store
+
+# Environment and secret files
 .env
-.git
+*.env
+
+# Git
+.git/
+.gitignore
+
+# VS Code and IDEs
+.vscode/
+.idea/
+
+# Terraform
+*.tf
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+terraform.tfvars.json
+
+# Logs
+*.log
+
+# Docker-related
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Markdown/docs
+README.md
+*.md
+
+# Misc
+*.zip
+*.tar.gz
