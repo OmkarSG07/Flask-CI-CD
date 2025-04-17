@@ -18,32 +18,30 @@
         state: started
         enabled: yes
 
-    - name: Stop the existing Flask app container (if any)
+    - name: Stop existing Flask app container (if running)
       docker_container:
         name: flask-app-container
         state: stopped
-        ignore_errors: yes
+        ignore_errors: yes   # Ignore errors if the container is not running
 
-    - name: Remove the existing Flask app container (if any)
+    - name: Remove existing Flask app container
       docker_container:
         name: flask-app-container
         state: absent
         ignore_errors: yes
 
-    - name: Pull Flask Docker image
+    - name: Pull the latest Flask Docker image from Docker Hub
       docker_image:
         name: omkarsg07/flask-app
-        source: pull
         tag: latest
+        source: pull
 
-    - name: Run Flask app container
+    - name: Run the Flask app container with latest image
       docker_container:
         name: flask-app-container
         image: omkarsg07/flask-app:latest
         state: started
         restart_policy: always
-        exposed_ports:
-          - "5000"
         published_ports:
           - "5000:5000"
         detach: yes
