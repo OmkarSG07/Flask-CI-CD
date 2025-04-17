@@ -18,10 +18,25 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install Ansible
+    - name: Install Ansible and Terraform
       run: |
         sudo apt update
-        sudo apt install -y ansible
+        sudo apt install -y ansible unzip
+        curl -fsSL https://releases.hashicorp.com/terraform/1.6.6/terraform_1.6.6_linux_amd64.zip -o terraform.zip
+        unzip terraform.zip
+        sudo mv terraform /usr/local/bin/
+        terraform -version
+
+    - name: Terraform Init
+      working-directory: terraform-aws
+      run: terraform init
+
+    - name: Get EC2 IP from Terraform Output and write to Ansible inventory
+      working-directory: terraform-aws
+      run: |
+        EC2_IP=$(terraform output -raw ec2_public_ip)
+        echo "[flask]" > ../ansible/inventory.ini
+        echo "$EC2_IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa" >> ../ansible/inventory.ini
 
     - name: Save EC2 SSH key
       run: |
@@ -32,4 +47,3 @@ jobs:
     - name: Run Ansible Playbook
       run: |
         ansible-playbook ansible/playbook.yml -i ansible/inventory.ini
-
