@@ -8,7 +8,7 @@ products = [
     {"city": "Nashik", "product": "Onion", "price": "₹40/kg"},
     {"city": "Solapur", "product": "Jowar", "price": "₹60/kg"},
     {"city": "Solapur", "product": "Groundnuts", "price": "₹90/kg"},
-    {"city": "Kolhapur", "product": "Sugarcane", "price": "₹30/stick"},
+    {"city": "Kolhapur", "product": "Sugarcane", "price": "₹2500/ton"},
 ]
 
 @app.route('/')
