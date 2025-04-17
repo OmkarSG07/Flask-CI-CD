@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Available Products</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>City</th>
+        <th>Product</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in products %}
+      <tr>
+        <td>{{ item.city }}</td>
+        <td>{{ item.product }}</td>
+        <td>{{ item.price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

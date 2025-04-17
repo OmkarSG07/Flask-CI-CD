@@ -1,39 +1,36 @@
 variable "region" {
-  description = "AWS region"
   default     = "us-east-1"
+  description = "AWS region"
 }
 
 variable "ami_id" {
-  description = "AMI ID for the EC2 instance"
+  description = "AMI ID for EC2"
   type        = string
 }
 
 variable "instance_type" {
-  description = "EC2 instance type"
   default     = "t2.micro"
+  description = "EC2 instance type"
 }
 
 variable "key_name" {
-  description = "Key pair name for SSH access"
+  description = "SSH key pair"
   type        = string
 }
 
-variable "subnet_id" {
-  description = "Subnet ID for EC2 instance"
-  type        = string
-}
-
-variable "alb_subnet_ids" {
-  description = "Subnets for the ALB"
-  type        = list(string)
-}
-
-variable "vpc_id" {
-  description = "VPC ID for target group"
-  type        = string
+variable "allowed_ssh_ip" {
+  default     = "0.0.0.0/0"
+  description = "CIDR for SSH access"
 }
 
 variable "instance_name" {
-  description = "Name tag for the EC2 instance"
   default     = "FlaskAppServer"
+}
+
+variable "docker_image" {
+  default     = "omkarsg07/flask-app"
+}
+
+variable "docker_tag" {
+  default     = "latest"
 }
