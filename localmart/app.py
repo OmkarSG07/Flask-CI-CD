@@ -5,10 +5,10 @@ app = Flask(__name__)
 # Sample in-memory product data
 products = [
     {"city": "Nashik", "product": "Grapes", "price": "₹100/kg"},
-    {"city": "Nashik", "product": "Onion", "price": "₹40/kg"},
-    {"city": "Solapur", "product": "Jowar", "price": "₹60/kg"},
-    {"city": "Solapur", "product": "Groundnuts", "price": "₹90/kg"},
-    {"city": "Kolhapur", "product": "Sugarcane", "price": "₹2500/ton"},
+    {"city": "Jalgoan", "product": "Banana", "price": "₹40/dozon"},
+    {"city": "Ratnagiri", "product": "Kaju", "price": "₹240/kg"},
+    {"city": "Sindhudurg", "product": "Mango", "price": "₹550/dozon"},
+    {"city": "Nagpur", "product": "Oranges", "price": "₹250/kg"},
 ]
 
 @app.route('/')
