@@ -1,4 +1,4 @@
-- name: Setup Flask App on EC2
+- name: Setup Flask App and Monitoring on EC2
   hosts: flask_server
   become: yes
 
@@ -46,48 +46,48 @@
           - "5000:5000"
         detach: yes
 
-- name: Create monitoring folder
-  file:
-      path: /home/ubuntu/monitoring
-      state: directory
+    - name: Create monitoring folder
+      file:
+        path: /home/ubuntu/monitoring
+        state: directory
 
-- name: Copy docker-compose file for Prometheus & Grafana
-  copy:
-      src: monitoring/docker-compose.yml
-      dest: /home/ubuntu/monitoring/docker-compose.yml
+    - name: Copy docker-compose file for Prometheus & Grafana
+      copy:
+        src: monitoring/docker-compose.yml
+        dest: /home/ubuntu/monitoring/docker-compose.yml
 
-- name: Copy prometheus.yml config
-  copy:
-      src: monitoring/prometheus.yml
-      dest: /home/ubuntu/monitoring/prometheus.yml
+    - name: Copy prometheus.yml config
+      copy:
+        src: monitoring/prometheus.yml
+        dest: /home/ubuntu/monitoring/prometheus.yml
 
-- name: Run Prometheus and Grafana containers
-  command: docker-compose up -d
-  args:
-      chdir: /home/ubuntu/monitoring
+    - name: Run Prometheus and Grafana containers
+      command: docker-compose up -d
+      args:
+        chdir: /home/ubuntu/monitoring
 
-- name: Pull Node Exporter image
-  docker_image:
-      name: prom/node-exporter
-      source: pull
+    - name: Pull Node Exporter image
+      docker_image:
+        name: prom/node-exporter
+        source: pull
 
-- name: Run Node Exporter container
-  docker_container:
-      name: node-exporter
-      image: prom/node-exporter
-      state: started
-      restart_policy: always
-      ports:
-        - "9100:9100"
+    - name: Run Node Exporter container
+      docker_container:
+        name: node-exporter
+        image: prom/node-exporter
+        state: started
+        restart_policy: always
+        ports:
+          - "9100:9100"
 
-- name: Restart Prometheus container
-  docker_container:
-      name: prometheus
-      state: started
-      restart: yes
+    - name: Restart Prometheus container
+      docker_container:
+        name: prometheus
+        state: started
+        restart: yes
 
-- name: Restart Grafana container
-  docker_container:
-      name: grafana
-      state: started
-      restart: yes
+    - name: Restart Grafana container
+      docker_container:
+        name: grafana
+        state: started
+        restart: yes
