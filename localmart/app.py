@@ -1,6 +1,17 @@
+import logging
+
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
+
+# Logging setup
+logging.basicConfig(level=logging.INFO)
+logger = app.logger
+
+@app.route('/')
+def home():
+    logger.info("Home route accessed")
+    return render_template('home.html')
 
 # Sample in-memory product data
 products = [

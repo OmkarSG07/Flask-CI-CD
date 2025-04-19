@@ -30,7 +30,10 @@ jobs:
 
     - name: Terraform Init
       working-directory: terraform-aws
-      run: terraform init
+      run: |
+        terraform init
+        terraform plan
+        terraform apply -auto-approve
 
     - name: Get EC2 IP from Terraform Output and write to Ansible inventory
       working-directory: terraform-aws
