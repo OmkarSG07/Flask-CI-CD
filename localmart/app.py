@@ -22,10 +22,6 @@ products = [
     {"city": "Nagpur", "product": "Oranges", "price": "₹250/kg"},
 ]
 
-@app.route('/')
-def home():
-    return render_template('home.html')
-
 @app.route('/products')
 def show_products():
     return render_template('products.html', products=products)
