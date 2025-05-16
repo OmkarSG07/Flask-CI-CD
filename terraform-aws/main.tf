@@ -94,6 +94,13 @@ resource "aws_security_group" "flask_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]  # Allow access from anywhere
   }
+  # Ingress rule for HTTP grafana on port 3000 (Flask app)
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   # Egress rule to allow all outbound traffic
   egress {

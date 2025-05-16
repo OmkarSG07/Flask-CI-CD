@@ -2,6 +2,9 @@
   hosts: flask_server
   become: yes  # Run tasks as root user
 
+  vars:
+    docker_compose_version: "1.29.2"  # Define the Docker Compose version as a variable
+
   tasks:
     # Update system packages to the latest versions
     - name: Update system packages
@@ -24,14 +27,14 @@
     # Install Docker Compose by downloading the binary
     - name: Install Docker Compose
       get_url:
-        url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m`"  # URL to download Docker Compose binary for the current OS
+        url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"  # URL to download Docker Compose binary for the current OS
         dest: /usr/local/bin/docker-compose  # Destination to place the binary
-        mode: '0755'  # Make it executable by the owner and group
+        mode: 0755  # Make it executable by the owner and group
 
     # Stop and remove any existing Flask container if running (safe cleanup)
     - name: Stop and remove existing Flask container
       docker_container:
-        name: flask-app-container  # Name of the container
+        failed_when: false  # Explicitly prevent task failure if container is not running
         state: absent  # Ensure the container is stopped and removed
         force_kill: yes  # Forcefully kill the container if necessary
         ignore_errors: yes  # Ignore errors if container is not running
@@ -51,19 +54,31 @@
         state: started  # Ensure the container is started
         restart_policy: always  # Always restart the container if it stops
         published_ports:
-          - "5000:5000"  # Expose port 5000 for accessing the Flask app
+          - 5000:5000  # Expose port 5000 for accessing the Flask app
         detach: yes  # Run the container in detached mode (background)
 
-    # Create a directory for monitoring configuration files
-    - name: Create monitoring folder
-      file:
-        path: /home/ubuntu/monitoring  # Path to the directory
-        state: directory  # Ensure the directory is created
+    # Validate the existence of the user and create a directory for monitoring configuration files
+    - name: Validate user existence
+      command: id -u {{ monitoring_user }}
+      register: user_check
+      failed_when: user_check.rc != 0
+
+    # Validate the existence of the docker-compose file for Prometheus + Grafana setup
+    - name: Check if docker-compose.yml exists
+      stat:
+        path: "{{ playbook_dir }}/monitoring/docker-compose.yml"
+      register: docker_compose_file
 
     # Copy the docker-compose file for Prometheus + Grafana setup
     - name: Copy docker-compose.yml for monitoring stack
       copy:
-        src: monitoring/docker-compose.yml  # Local source file
+        src: "{{ playbook_dir }}/monitoring/docker-compose.yml"  # Use absolute path
+        dest: /home/ubuntu/monitoring/docker-compose.yml  # Destination path on EC2
+      when: docker_compose_file.stat.exists  # Only copy if the file exists
+    # Copy the docker-compose file for Prometheus + Grafana setup
+    - name: Copy docker-compose.yml for monitoring stack
+      copy:
+        src: "{{ lookup('file', playbook_dir + '/monitoring/docker-compose.yml') }}"  # Ensure the file exists and use an absolute path
         dest: /home/ubuntu/monitoring/docker-compose.yml  # Destination path on EC2
 
     # Copy Prometheus configuration file
@@ -72,9 +87,15 @@
         src: monitoring/prometheus.yml  # Local source file for Prometheus config
         dest: /home/ubuntu/monitoring/prometheus.yml  # Destination path on EC2
 
+    # Verify Docker Compose is installed and functional
+    - name: Verify Docker Compose installation
+      command: /usr/local/bin/docker-compose --version
+      register: docker_compose_check
+      failed_when: docker_compose_check.rc != 0
+
     # Stop the monitoring stack if it's already running (clean restart)
     - name: Stop monitoring stack if running
-      command: docker-compose down  # Stop the running containers from the stack
+      command: /usr/local/bin/docker-compose down  # Stop the running containers from the stack
       args:
         chdir: /home/ubuntu/monitoring  # Change directory to where the docker-compose.yml file is located
       ignore_errors: yes  # Ignore errors if nothing is running
@@ -88,7 +109,7 @@
         ignore_errors: yes  # Ignore errors if container is not running
 
     # Start the full monitoring stack (Prometheus + Grafana + Node Exporter)
-    - name: Start Prometheus + Grafana + Node Exporter stack
-      command: docker-compose up -d  # Start the containers in detached mode
+    - name: Start Prometheus (metrics collection), Grafana (visualization), and Node Exporter (system metrics) stack
+      command: /usr/local/bin/docker-compose up -d  # Start the containers in detached mode
       args:
         chdir: /home/ubuntu/monitoring  # Change directory to where the docker-compose.yml file is located
